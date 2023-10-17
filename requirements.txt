@@ -3,3 +3,4 @@ shiny
 gapminder
 dplyr
 ggplot2
+plotly
