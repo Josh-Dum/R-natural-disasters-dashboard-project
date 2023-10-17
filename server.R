@@ -1,4 +1,11 @@
 # server.R
 function(input, output) {
-  # ... votre code pour la logique du serveur
+  output$plot <- renderPlot({
+    
+    gapminder %>%
+      filter(year==2007) %>%
+      ggplot(aes(x=gdpPercap, y=lifeExp)) +
+      geom_point()
+    
+  })
 }

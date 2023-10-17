@@ -1,4 +1,8 @@
 # ui.R
 fluidPage(
-  # ... votre code pour l'interface utilisateur
+  # Application title
+  titlePanel("Life Expectancy vs GDP per Capita"),
+  
+  # Main panel
+  mainPanel(plotOutput(outputId = "plot"))
 )
