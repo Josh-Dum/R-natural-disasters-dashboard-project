@@ -1,0 +1,3 @@
+# global.R
+library(shiny)
+
