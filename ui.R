@@ -1,8 +1,5 @@
 # ui.R
 fluidPage(
-  # Application title
-  titlePanel("Life Expectancy vs GDP per Capita"),
-  
-  # Main panel
-  mainPanel(plotOutput(outputId = "plot"))
+  titlePanel("Histogramme des décès totaux dus aux catastrophes naturelles"),
+  plotOutput("histogram")
 )
