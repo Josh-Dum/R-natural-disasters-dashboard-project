@@ -34,13 +34,18 @@ server <- function(input, output) {
              `Total Deaths` >= 0, `Total Deaths` <= 10000)
     
     ggplot(filtered_data, aes(x = `Total Deaths`, fill = `Disaster Subgroup`)) + 
-      geom_histogram(color = "black", alpha = 0.7) + 
+      geom_histogram(bins = 30, color="black", alpha=0.7) +
       scale_y_log10(labels = scales::comma) +
       theme_minimal() +
+      theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
       labs(title = "Histogramme des décès (0 à 10,000) dus aux catastrophes naturelles",
            x = "Décès totaux",
            y = "Nombre d'événements (Échelle logarithmique)")
   })
+  
+  
+  
+  
   
   output$graph4 <- renderPlotly({
     filtered_data <- disaster_data %>%
