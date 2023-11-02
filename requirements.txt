@@ -4,3 +4,4 @@ gapminder
 dplyr
 ggplot2
 plotly
+leaflet
