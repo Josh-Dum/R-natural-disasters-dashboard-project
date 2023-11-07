@@ -1,6 +1,8 @@
 # server.R
 
 server <- function(input, output) {
+  
+  # Graphique 1
   output$graph1 <- renderPlot({
     filtered_data <- disaster_data %>%
       filter(Year >= input$year_slider[1], Year <= input$year_slider[2])
@@ -9,11 +11,13 @@ server <- function(input, output) {
       geom_histogram(fill = "blue", color = "black", alpha = 0.7) + 
       scale_y_log10(labels = scales::comma) +
       theme_minimal() +
+      theme(plot.title = element_text(hjust = 0.5)) +  # Centrer le titre
       labs(title = "Histogramme global du nombre total de décès dus aux catastrophes naturelles",
            x = "Décès totaux",
            y = "Nombre d'événements (Échelle logarithmique)")
   })
   
+  # Graphique 2
   output$graph2 <- renderPlot({
     filtered_data <- disaster_data %>% 
       filter(Year >= input$year_slider[1], Year <= input$year_slider[2], 
@@ -23,11 +27,13 @@ server <- function(input, output) {
       geom_histogram(fill = "blue", color = "black", alpha = 0.7) + 
       scale_y_log10(labels = scales::comma) +
       theme_minimal() +
+      theme(plot.title = element_text(hjust = 0.5)) +  # Centrer le titre
       labs(title = "Histogramme des décès (0 à 10,000) dus aux catastrophes naturelles",
            x = "Décès totaux",
            y = "Nombre d'événements (Échelle logarithmique)")
   })
   
+  # Graphique 3
   output$graph3 <- renderPlot({
     filtered_data <- disaster_data %>% 
       filter(Year >= input$year_slider[1], Year <= input$year_slider[2], 
@@ -37,7 +43,7 @@ server <- function(input, output) {
       geom_histogram(bins = 30, color="black", alpha=0.7) +
       scale_y_log10(labels = scales::comma) +
       theme_minimal() +
-      theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+      theme(plot.title = element_text(hjust = 0.5)) +  # Centrer le titre
       labs(title = "Histogramme des décès (0 à 10,000) dus aux catastrophes naturelles",
            x = "Décès totaux",
            y = "Nombre d'événements (Échelle logarithmique)")
@@ -56,12 +62,14 @@ server <- function(input, output) {
       add_histogram2d(x = ~`Total Deaths`, y = ~`Total Damages ('000 US$)`, nbinsx = 6, nbinsy = 6) %>%
       add_markers(x = ~`Total Deaths`, y = ~`Total Damages ('000 US$)`) %>%
       layout(
+        title = "Histogramme 2D des Décès et Dommages", # Ajout du titre ici
         xaxis = list(title = "Total Deaths", range = c(0, 500)),
         yaxis = list(title = "Total Damages ('000 US$)", range = c(0, 1000000), type = "linear")
       )
     
     p4
   })
+  
   
   output$map <- renderLeaflet({
     
