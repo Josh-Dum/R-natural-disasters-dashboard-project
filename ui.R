@@ -1,28 +1,45 @@
 # ui.R
+library(shinydashboard)
 
-fluidPage(
-  tags$head(tags$link(rel="stylesheet", type="text/css", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")),
+# Dashboard UI
+ui <- dashboardPage(
+  dashboardHeader(title = "Mon Dashboard"),
   
-  titlePanel("Mon Dashboard"),
+  # Sidebar avec des éléments de navigation
+  dashboardSidebar(
+    width = 200, # La largeur peut être fixe
+    sidebarMenu(
+      menuItem("Histogrammes", tabName = "histograms", icon = icon("chart-bar")), # correction d'icône
+      menuItem("Carte des catastrophes", tabName = "map", icon = icon("globe"))
+    )
+  ),
   
-  tabsetPanel(
-    tabPanel("Histogrammes",
-             # Éléments de l'interface utilisateur de ui.R
-             sliderInput("year_slider", "Sélectionnez une plage d'années:", min = 1900, max = 2021, value = c(1900, 2021),step = 1,round = TRUE,sep = "",width = "100%"),
-             plotOutput("graph1"),
-             plotOutput("graph2"),
-             plotOutput("graph3"),
-             plotlyOutput("graph4")
-    ),
-    tabPanel("Carte des catastrophes",
-             # Éléments de l'interface utilisateur de ui_map.R
-             fluidRow(
-               column(12, 
-                      sliderInput("range", "Sélectionnez une plage d'années:", min = min(annees), max = max(annees), value = c(max(annees)-1, max(annees)),step = 1,round = TRUE,sep = "",width = "100%")
-               ),
-               # ... (autres éléments de l'interface utilisateur pour la carte)
-             ),
-             leafletOutput("map")
+  # Corps principal du tableau de bord
+  dashboardBody(
+    tabItems(
+      # Premier onglet : Histogrammes
+      tabItem(tabName = "histograms",
+              fluidRow(
+                box(sliderInput("year_slider", "Sélectionnez une plage d'années :", 
+                                min = 1900, max = 2021, value = c(1900, 2021),
+                                step = 1, round = TRUE, sep = "", width = "100%")),
+                box(plotOutput("graph1"), width = 6),
+                box(plotOutput("graph2"), width = 6),
+                box(plotOutput("graph3"), width = 6),
+                box(plotlyOutput("graph4"), width = 6)
+              )
+      ),
+      
+      # Deuxième onglet : Carte
+      tabItem(tabName = "map",
+              fluidRow(
+                box(sliderInput("range", "Sélectionnez une plage d'années :", 
+                                min = 1900, max = 2021, # Ces valeurs devront être dynamiques, ajustées selon vos données
+                                value = c(2020, 2021), 
+                                step = 1, round = TRUE, sep = "", width = "100%")),
+                box(leafletOutput("map"), width = 12)
+              )
+      )
     )
   )
 )
