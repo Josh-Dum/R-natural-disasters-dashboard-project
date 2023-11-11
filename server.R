@@ -327,7 +327,41 @@ server <- function(input, output) {
       layout(title = "Répartition des catastrophes naturelles par pays et continent")
     
     fig # Retourner le graphique pour l'affichage
-  })  
+  })
+  
+  #graphique 1 du navtab5
+  output$graph51 <- renderPlotly({
+    # Générer des couleurs aléatoires pour les nœuds
+    set.seed(123) # Pour la reproductibilité
+    
+    node_colors <- sapply(1:length(labels), function(x) rgb(runif(1), runif(1), runif(1), 1))
+    
+    # Générer des couleurs pour les liens
+    link_colors <- sapply(1:length(source), function(x) rgb(runif(1), runif(1), runif(1), 0.5))
+    # Créer le diagramme de Sankey avec des couleurs
+    fig <- plot_ly(
+      type = "sankey",
+      orientation = "h",
+      node = list(
+        label = labels,
+        color = node_colors, # Utiliser les couleurs générées pour les nœuds
+        pad = 15,
+        thickness = 20,
+        line = list(color = "black", width = 0.5)
+      ),
+      link = list(
+        source = source - 1,
+        target = target - 1,
+        value = value,
+        color = link_colors # Utiliser les couleurs générées pour les liens
+      )
+    )
+    
+    fig <- fig %>% layout(title = "Diagramme de Sankey des Catastrophes Naturelles", font = list(size = 10))
+    
+    fig
+    
+  })
   
   
 }

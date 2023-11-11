@@ -12,7 +12,8 @@ ui <- dashboardPage(
       menuItem("Histogrammes", tabName = "histograms", icon = icon("chart-bar")),
       menuItem("Carte des catastrophes", tabName = "map", icon = icon("globe")),
       menuItem("Evolution des morts", tabName = "navitem3", icon = icon("chart-pie")),
-      menuItem("Evolution des catastrophes", tabName = "navitem4", icon = icon("chart-line"))
+      menuItem("Evolution des catastrophes", tabName = "navitem4", icon = icon("chart-line")),
+      menuItem("Catastrophes les plus meurtrières", tabName = "navitem5", icon = icon("chart-line"))
     )
   ),
   
@@ -92,6 +93,14 @@ ui <- dashboardPage(
               ),
               fluidRow(
                 box(plotlyOutput("graph41"), width = 12)
+              )
+      ),
+      
+      # 5e onglet : Catastrophes les plus meurtrières
+      tabItem(tabName = "navitem5",
+              div(style = "text-align: center;", h2("Catastrophes les plus meurtrières")),
+              fluidRow(
+                box(plotlyOutput("graph51", height = 1000), width = 12)
               )
       )
       
