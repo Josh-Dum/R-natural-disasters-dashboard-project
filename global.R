@@ -9,11 +9,19 @@ library(plotly)
 library(tidyverse)
 library(ggplot2)
 library(gapminder)
+library(zoo) # pour rollapply
+library(tidyr) # pour pivot_wider
 
 # Chargement et préparation des données du premier fichier
-
 df_catastrophe <- read.csv("natural_disaster.csv",sep=",")
 df_geoloc <- read.csv("new_dataframe.csv",sep=",")
+global_temp_data <- read.csv("Global Temperature.csv", sep = ",")
+
+# Renommer les colonnes pour éviter les problèmes d'espaces
+names(global_temp_data) <- c("Year", "Month", "Monthly_Anomaly", "Monthly_Unc", 
+                             "Annual_Anomaly", "Annual_Unc", "Five_Year_Anomaly", 
+                             "Five_Year_Unc", "Ten_Year_Anomaly", "Ten_Year_Unc", 
+                             "Twenty_Year_Anomaly", "Twenty_year_Unc")
 
 df_catastrophe$Latitude <- df_geoloc$Latitude
 df_catastrophe$Longitude <- df_geoloc$Longitude

@@ -6,3 +6,4 @@ ggplot2
 plotly
 leaflet
 shinydashboard
+zoo

@@ -2,6 +2,27 @@
 
 server <- function(input, output) {
   
+  # Traitement des données pour la température globale
+  global_temp_data <- global_temp_data %>%
+    mutate(Year = as.numeric(Year),
+           Annual_Anomaly = as.numeric(Annual_Anomaly)) %>% 
+    filter(!is.na(Year), !is.na(Annual_Anomaly), Year >= 1900, Year <= 2021)
+  
+  global_temp_data$Smoothed_Anomaly <- rollapply(global_temp_data$Annual_Anomaly, 50, mean, fill = NA, align = "center")
+  
+  # Traitement des données pour les catastrophes naturelles
+  df_catastrophe$Year <- as.numeric(df_catastrophe$Year)
+  disaster_count_per_year <- df_catastrophe %>%
+    filter(!is.na(Year)) %>%
+    group_by(Year) %>%
+    summarize(Count = n())
+  
+  disaster_count_by_type <- df_catastrophe %>%
+    filter(!is.na(Year)) %>%
+    count(Year, `Disaster.Type`) %>%
+    pivot_wider(names_from = `Disaster.Type`, values_from = n, values_fill = list(n = 0))
+  
+  
   # Graphique 1
   output$graph1 <- renderPlot({
     filtered_data <- disaster_data %>%
@@ -130,8 +151,32 @@ server <- function(input, output) {
     
     map})
   
+  #graphique 1 de navitem 3
+  output$graph31 <- renderPlotly({
+    fig1 <- plot_ly() %>%
+      add_lines(x = ~Year, y = ~Count, data = disaster_count_per_year, name = 'Nombre de catastrophes', yaxis = "y") %>%
+      add_lines(x = ~Year, y = ~Smoothed_Anomaly, data = global_temp_data, name = 'Écart de température', yaxis = "y2") %>%
+      layout(title = "Nombre de catastrophes naturelles et écart de température par an",
+             yaxis2 = list(overlaying = "y", side = "right"),
+             xaxis = list(title = "Année"),
+             yaxis = list(title = "Nombre de catastrophes"),
+             yaxis2 = list(title = "Écart de température"))
+    fig1
+  })  
   
-  
+  #graphique 2 de navitem 3
+  output$graph32 <- renderPlotly({
+    fig2 <- plot_ly()
+    for(disaster_type in colnames(disaster_count_by_type[-1])) {
+      fig2 <- fig2 %>%
+        add_lines(x = ~Year, y = disaster_count_by_type[[disaster_type]], data = disaster_count_by_type, name = disaster_type)
+    }
+    fig2 <- fig2 %>%
+      layout(title = "Nombre de catastrophes naturelles par type par an",
+             xaxis = list(title = "Année"),
+             yaxis = list(title = "Nombre de catastrophes"))
+    fig2    
+  })  
   
   
   

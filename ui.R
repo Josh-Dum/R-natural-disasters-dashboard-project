@@ -10,7 +10,9 @@ ui <- dashboardPage(
     width = 200, # La largeur peut être fixe
     sidebarMenu(
       menuItem("Histogrammes", tabName = "histograms", icon = icon("chart-bar")),
-      menuItem("Carte des catastrophes", tabName = "map", icon = icon("globe"))
+      menuItem("Carte des catastrophes", tabName = "map", icon = icon("globe")),
+      menuItem("Evolution des morts", tabName = "navitem3", icon = icon("chart-pie")),
+      menuItem("Evolution des catastrophes", tabName = "navitem4", icon = icon("chart-line"))
     )
   ),
   
@@ -51,7 +53,26 @@ ui <- dashboardPage(
               fluidRow(
                 box(leafletOutput("map", height = 800), width = 12)
               )
+      ),
+      
+      # troisième onglet : Evolution des morts
+      tabItem(tabName = "navitem3",
+              div(style = "text-align: center;", h2("Evolution des morts")),
+              fluidRow(
+                box(plotlyOutput("graph31"), width = 12)
+              ),
+              fluidRow(
+                box(plotlyOutput("graph32"), width = 12)
+              )
+      ),
+      
+      # 4e onglet : Evolution des catastrophes
+      tabItem(tabName = "navitem4",
+              div(style = "text-align: center;", h2("Evolution des catastrophes"))
+              
       )
+      
+      
     )
   )
 )
