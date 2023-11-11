@@ -23,6 +23,9 @@ server <- function(input, output) {
     pivot_wider(names_from = `Disaster.Type`, values_from = n, values_fill = list(n = 0))
   
   
+
+  
+  
   # Graphique 1
   output$graph1 <- renderPlot({
     filtered_data <- disaster_data %>%
@@ -178,6 +181,68 @@ server <- function(input, output) {
     fig2    
   })  
   
+  #graphique 1 de navitem 4
+  output$graph41 <- renderPlotly({
+    # manipuulation donnée pour le graphique 41
+    # Filtrer les données en fonction de la sélection d'années
+    filtered_data <- df_catastrophe %>%
+      filter(Year >= input$year_slider_graph41[1], Year <= input$year_slider_graph41[2])
+    
+    # Agrégation des données pour obtenir le nombre total de morts et de catastrophes par pays et continent
+    aggregated_data <- filtered_data %>%
+      group_by(Continent, Country) %>%
+      summarise(Total_Deaths = sum(`Total.Deaths`, na.rm = TRUE),
+                Num_Disasters = n(), .groups = 'drop') # Compter les catastrophes et sommer les morts
+    
+    # Calculer le total des décès par continent
+    continent_deaths <- aggregated_data %>%
+      group_by(Continent) %>%
+      summarise(Total_Deaths = sum(Total_Deaths, na.rm = TRUE), .groups = 'drop')
+    
+    # Ajouter une ligne pour chaque continent avec le monde comme parent
+    world <- data.frame(Continent = rep("World", length(continent_deaths$Continent)), 
+                        Country = continent_deaths$Continent, 
+                        Total_Deaths = continent_deaths$Total_Deaths, 
+                        Num_Disasters = NA)
+    
+    # Ajouter une ligne pour le monde sans parent
+    world_total <- data.frame(Continent = NA, Country = "World", Total_Deaths = sum(continent_deaths$Total_Deaths, na.rm = TRUE), Num_Disasters = NA)
+    
+    # Combiner les dataframes
+    hierarchy <- rbind(world_total, world, aggregated_data)
+    
+    # Remplacer les NA par des chaînes vides pour Plotly et des zéros pour les valeurs numériques
+    hierarchy$Continent[is.na(hierarchy$Continent)] <- ""
+    hierarchy$Total_Deaths[is.na(hierarchy$Total_Deaths)] <- 1 # Remplacer NA par 1 pour éviter log(0)
+    hierarchy$Num_Disasters[is.na(hierarchy$Num_Disasters)] <- 0
+    
+    # Appliquer une échelle logarithmique pour les décès
+    hierarchy$Log_Total_Deaths <- log10(hierarchy$Total_Deaths + 1) # Ajouter 1 pour éviter log(0)
+    
+
+    # Créer le treemap avec un titre
+    fig <- plot_ly(
+      type = "treemap",
+      labels = hierarchy$Country,
+      parents = hierarchy$Continent,
+      values = hierarchy$Num_Disasters, # Utiliser le nombre de catastrophes pour la taille des cases
+      textinfo = "label+value",
+      marker = list(
+        colors = hierarchy$Log_Total_Deaths, # Utiliser le logarithme du nombre total de morts pour la couleur des cases
+        colorscale = 'RdBu', # Utiliser une échelle de rouge pour les morts
+        cmin = min(hierarchy$Log_Total_Deaths, na.rm = TRUE), # Minimum basé sur le log du nombre minimal de morts
+        cmax = max(hierarchy$Log_Total_Deaths, na.rm = TRUE), # Maximum basé sur le log du nombre maximal de morts
+        colorbar = list(
+          title = "Log Total Deaths",
+          tickvals = log10(c(1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 15000000)),
+          ticktext = c("1", "10", "100", "1k", "10k", "100k", "1M", "10M", "")
+        )
+      )
+    ) %>%
+      layout(title = "Répartition des catastrophes naturelles par pays et continent")
+    
+    fig # Retourner le graphique pour l'affichage
+  })  
   
   
 }

@@ -68,8 +68,24 @@ ui <- dashboardPage(
       
       # 4e onglet : Evolution des catastrophes
       tabItem(tabName = "navitem4",
-              div(style = "text-align: center;", h2("Evolution des catastrophes"))
-              
+              div(style = "text-align: center;", h2("Evolution des catastrophes")),
+              fluidRow(
+                box(plotlyOutput("carte41"), width = 12)
+              ),
+              fluidRow(
+                box(plotlyOutput("carte42"), width = 12)
+              ),
+              # Ajout d'une rangée fluide avec un slider pour filtrer les années
+              fluidRow(
+                box(title = "Filtres", status = "primary", solidHeader = TRUE, collapsible = TRUE, width = 12,
+                    sliderInput("year_slider_graph41", "Sélectionnez une plage d'années :", 
+                                min = 1900, max = 2021, value = c(1900, 2021),
+                                step = 1, round = TRUE, sep = "", width = "100%")
+                )
+              ),
+              fluidRow(
+                box(plotlyOutput("graph41"), width = 12)
+              )
       )
       
       

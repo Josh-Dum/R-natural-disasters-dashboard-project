@@ -7,3 +7,5 @@ plotly
 leaflet
 shinydashboard
 zoo
+sf
+networkD3

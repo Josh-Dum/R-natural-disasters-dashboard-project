@@ -7,6 +7,7 @@ library(dplyr)
 library(readr)
 library(plotly)
 library(tidyverse)
+library(shinydashboard)
 library(ggplot2)
 library(gapminder)
 library(zoo) # pour rollapply
