@@ -70,7 +70,14 @@ ui <- dashboardPage(
       tabItem(tabName = "navitem4",
               div(style = "text-align: center;", h2("Evolution des catastrophes")),
               fluidRow(
-                box(plotlyOutput("carte41"), width = 12)
+                box(title = "Filtres", status = "primary", solidHeader = TRUE, collapsible = TRUE, width = 12,
+                    sliderInput("year_slider_carte", "Sélectionnez une plage d'années :", 
+                                min = 1900, max = 2021, value = c(1900, 2021),
+                                step = 1, round = TRUE, sep = "", width = "100%")
+                )
+              ),
+              fluidRow(
+                box(leafletOutput("carte41", height = 800), width = 12)
               ),
               fluidRow(
                 box(plotlyOutput("carte42"), width = 12)

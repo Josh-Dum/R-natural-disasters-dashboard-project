@@ -181,6 +181,55 @@ server <- function(input, output) {
     fig2    
   })  
   
+  # Créer une carte colorée en fonction du nombre de catastrophes
+  output$carte41 <- renderLeaflet({
+    
+    debut <- input$year_slider_carte[1]
+    fin <- input$year_slider_carte[2]
+    
+    # Filtrer les données
+    df_filtered <- disaster_counts %>%
+      filter(Year >= debut & Year <= fin)
+    
+    # Calculs pour les catastrophes et les morts
+    country_disaster_counts <- df_filtered %>%
+      group_by(ISO) %>%
+      summarise(Disaster_Count = sum(`Disaster Count`))
+    
+    
+    
+    
+    # Fusionner avec les données géographiques
+    merged_disaster_data <- merge(country_geojson_sf, country_disaster_counts, by.x = "ISO_A3", by.y = "ISO")
+    
+    
+    # Création de la carte avec leaflet
+    map_disaster <- leaflet() %>%
+      setView(lng = 2.5840685, lat = 48.8398094, zoom = 3) %>%
+      addProviderTiles(providers$Esri.WorldTopoMap) %>%
+      
+      addPolygons(data = merged_disaster_data,
+                  fillColor = ~colorNumeric("YlOrRd", Disaster_Count)(Disaster_Count),
+                  weight = 1,
+                  color = "black",
+                  fillOpacity = 0.7,
+                  label = ~paste0(ISO_A3, ": ", Disaster_Count),
+                  layerId = ~ISO_A3,
+                  group = "Nombre de catastrophes naturelles par pays"
+      )%>%
+      addLayersControl(overlayGroups = c("Nombre de catastrophes naturelles par pays"))%>%
+      
+      # Ajouter une légende pour les décès (ajuster en fonction des données)
+      addLegend("bottomleft", 
+                pal = colorNumeric("OrRd", domain = merged_disaster_data$Disaster_Count),
+                values = merged_disaster_data$Disaster_Count,
+                title = "Nombre de morts",
+                opacity = 0.7)
+    
+    map_disaster
+  })
+  
+  
   #graphique 1 de navitem 4
   output$graph41 <- renderPlotly({
     # manipuulation donnée pour le graphique 41

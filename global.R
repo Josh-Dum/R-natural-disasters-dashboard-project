@@ -12,6 +12,9 @@ library(ggplot2)
 library(gapminder)
 library(zoo) # pour rollapply
 library(tidyr) # pour pivot_wider
+library(sf)
+library(sp)
+library(networkD3)
 
 # Chargement et préparation des données du premier fichier
 df_catastrophe <- read.csv("natural_disaster.csv",sep=",")
@@ -54,4 +57,55 @@ marqueur_type_de_catastrophe <- list(
 
 # On importe nos données
 disaster_data <- read_csv("./natural_disaster.csv")
+
+# Suppression des lignes avec des valeurs manquantes pour 'ISO' et 'Year'
+df_castrophe_country <- df_catastrophe %>% 
+  filter(!is.na(ISO) & !is.na(Year))
+
+# Calcul du nombre total de catastrophes par année et par pays
+disaster_counts <- df_castrophe_country %>%
+  count(Year, ISO, name = "Disaster Count")
+
+# Calcul du nombre total de morts par année et par pays
+disaster_death_counts <- df_castrophe_country %>%
+  group_by(Year, ISO) %>%
+  summarise("Death Count" = sum(`Total.Deaths`, na.rm = TRUE)) %>%
+  ungroup()
+
+# Chemin vers le fichier GeoJSON qui contient les frontières des pays
+country_geojson_sf <- st_read("countries.geojson")
+
+
+
+
+# Select the necessary columns
+selected_columns <- c('Disaster.Group', 'Disaster.Subgroup', 'Disaster.Type', 'Disaster.Subtype', 'Disaster.Subsubtype')
+df_selected <- select(df_catastrophe, all_of(selected_columns))
+
+# Créer la liste des labels
+labels <- unique(unlist(df_selected))
+
+# Créer un mapping pour les labels
+label_mapping <- setNames(seq_along(labels), labels)
+
+# Initialiser les listes source, target et value
+source <- numeric()
+target <- numeric()
+value <- numeric()
+
+# Remplir les listes pour chaque paire de colonnes adjacentes
+for (i in 1:(length(selected_columns) - 1)) {
+  col1 <- selected_columns[i]
+  col2 <- selected_columns[i + 1]
+  
+  grouped_df <- df_selected %>%
+    group_by(!!sym(col1), !!sym(col2)) %>%
+    summarise(count = n(), .groups = 'drop')
+  
+  for(j in 1:nrow(grouped_df)) {
+    source <- c(source, label_mapping[grouped_df[[1]][j]])
+    target <- c(target, label_mapping[grouped_df[[2]][j]])
+    value <- c(value, grouped_df$count[j])
+  }
+}
 
