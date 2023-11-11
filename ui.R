@@ -80,7 +80,7 @@ ui <- dashboardPage(
                 box(leafletOutput("carte41", height = 800), width = 12)
               ),
               fluidRow(
-                box(plotlyOutput("carte42"), width = 12)
+                box(leafletOutput("carte42", height = 800), width = 12)
               ),
               # Ajout d'une rangée fluide avec un slider pour filtrer les années
               fluidRow(

@@ -229,6 +229,42 @@ server <- function(input, output) {
     map_disaster
   })
   
+  #carte nombre de mort par pays
+  output$carte42 <- renderLeaflet({
+    
+    debut <- input$year_slider_carte[1]
+    fin <- input$year_slider_carte[2]
+    df_filtered_death <- disaster_death_counts %>%
+      filter(Year >= debut & Year <= fin)
+    
+    country_death_counts <- df_filtered_death %>%
+      group_by(ISO) %>%
+      summarise(Death_Count = sum(`Death Count`))
+    
+    merged_death_data <- merge(country_geojson_sf, country_death_counts, by.x = "ISO_A3", by.y = "ISO")
+    
+    map_death <- leaflet() %>%
+      setView(lng = 2.5840685, lat = 48.8398094, zoom = 3) %>%
+      addProviderTiles(providers$Esri.WorldTopoMap) %>%addPolygons(data = merged_death_data,
+                                                                   fillColor = ~colorNumeric("OrRd", Death_Count)(Death_Count),
+                                                                   weight = 1,
+                                                                   color = "black",
+                                                                   fillOpacity = 0.7,
+                                                                   label = ~paste0(ISO_A3, ": ", Death_Count),
+                                                                   layerId = ~ISO_A3,
+                                                                   group = "Nombre de mort par pays"
+      ) %>%
+      addLayersControl(overlayGroups = c("Nombre de mort par pays")) %>%
+      # Ajouter une légende pour les décès (ajuster en fonction des données)
+      addLegend("bottomleft", 
+                pal = colorNumeric("OrRd", domain = merged_death_data$Death_Count),
+                values = merged_death_data$Death_Count,
+                title = "Nombre de morts",
+                opacity = 0.7)
+    # Afficher la carte
+    map_death
+  })
+  
   
   #graphique 1 de navitem 4
   output$graph41 <- renderPlotly({
