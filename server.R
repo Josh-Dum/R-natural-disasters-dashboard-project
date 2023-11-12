@@ -363,5 +363,69 @@ server <- function(input, output) {
     
   })
   
+  # Générer le graphique 2 du navitem 5
+  output$graph52 <- renderPlotly({
+    # Charger les données
+    df_catastrophe <- read.csv("natural_disaster.csv")
+    
+    # Filtrer les données en fonction de la plage d'années sélectionnée
+    df_catastrophe <- df_catastrophe %>%
+      filter(Year >= input$year_slider_graph52[1], Year <= input$year_slider_graph52[2])
+    
+    # Remplacer les valeurs NA par 0 dans le nombre de décès
+    df_catastrophe$Total.Deaths[is.na(df_catastrophe$Total.Deaths)] <- 0
+    
+    # Créer des identifiants uniques pour chaque niveau de la hiérarchie
+    data <- df_catastrophe %>%
+      mutate(GroupId = Disaster.Group,
+             SubgroupId = ifelse(!is.na(Disaster.Subgroup), paste(Disaster.Group, Disaster.Subgroup, sep = "-"), Disaster.Group),
+             TypeId = ifelse(!is.na(Disaster.Type), paste(Disaster.Group, Disaster.Subgroup, Disaster.Type, sep = "-"), SubgroupId),
+             SubtypeId = ifelse(!is.na(Disaster.Subtype), paste(Disaster.Group, Disaster.Subgroup, Disaster.Type, Disaster.Subtype, sep = "-"), TypeId),
+             SubsubtypeId = ifelse(!is.na(Disaster.Subsubtype), paste(Disaster.Group, Disaster.Subgroup, Disaster.Type, Disaster.Subtype, Disaster.Subsubtype, sep = "-"), SubtypeId))
+    
+    # Agréger les données pour chaque niveau en créant d'abord des labels
+    group_data <- data %>%
+      group_by(GroupId) %>%
+      summarise(TotalDeaths = sum(Total.Deaths, na.rm = TRUE), .groups = 'drop') %>%
+      mutate(Label = GroupId, Parent = "", ids = GroupId)
+    
+    subgroup_data <- data %>%
+      group_by(GroupId, SubgroupId) %>%
+      summarise(TotalDeaths = sum(Total.Deaths, na.rm = TRUE), .groups = 'drop') %>%
+      mutate(Label = SubgroupId, Parent = GroupId, ids = SubgroupId)
+    
+    type_data <- data %>%
+      group_by(SubgroupId, TypeId) %>%
+      summarise(TotalDeaths = sum(Total.Deaths, na.rm = TRUE), .groups = 'drop') %>%
+      mutate(Label = TypeId, Parent = SubgroupId, ids = TypeId)
+    
+    subtype_data <- data %>%
+      group_by(TypeId, SubtypeId) %>%
+      summarise(TotalDeaths = sum(Total.Deaths, na.rm = TRUE), .groups = 'drop') %>%
+      mutate(Label = SubtypeId, Parent = TypeId, ids = SubtypeId)
+    
+    subsubtype_data <- data %>%
+      group_by(SubtypeId, SubsubtypeId) %>%
+      summarise(TotalDeaths = sum(Total.Deaths, na.rm = TRUE), .groups = 'drop') %>%
+      mutate(Label = SubsubtypeId, Parent = SubtypeId, ids = SubsubtypeId)
+    
+    # S'assurer que toutes les colonnes sont présentes dans chaque dataframe
+    cols <- c("ids", "Label", "Parent", "TotalDeaths")
+    group_data <- group_data[cols]
+    subgroup_data <- subgroup_data[cols]
+    type_data <- type_data[cols]
+    subtype_data <- subtype_data[cols]
+    subsubtype_data <- subsubtype_data[cols]
+    
+    # Combiner toutes les données
+    all_data <- rbind(group_data, subgroup_data, type_data, subtype_data, subsubtype_data)
+    
+    # Créer le diagramme en soleil avec tous les niveaux
+    fig <- plot_ly(all_data, ids = ~ids, labels = ~Label, parents = ~Parent, values = ~TotalDeaths, branchvalues = "total", type = 'sunburst')
+    
+    # Retourner le graphique Plotly
+    fig
+  })
+  
   
 }

@@ -101,6 +101,16 @@ ui <- dashboardPage(
               div(style = "text-align: center;", h2("Catastrophes les plus meurtrières")),
               fluidRow(
                 box(plotlyOutput("graph51", height = 1000), width = 12)
+              ),
+              fluidRow(
+                box(title = "Filtres", status = "primary", solidHeader = TRUE, width = 12,
+                    sliderInput("year_slider_graph52", "Sélectionnez une plage d'années :", 
+                                min = 1900, max = 2021, value = c(1900, 2021),
+                                step = 1, round = TRUE, sep = "", width = "100%")
+                )
+              ),
+              fluidRow(
+                box(plotlyOutput("graph52", height = 1000), width = 12)
               )
       )
       
