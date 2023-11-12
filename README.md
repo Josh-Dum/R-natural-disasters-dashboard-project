@@ -83,6 +83,74 @@ Le fichier `Global Temperature.csv` contient des données détaillées sur les t
 6. **Five-Year Anomaly, Ten-Year Anomaly, Twenty-Year Anomaly** : Anomalies calculées sur des périodes de cinq, dix et vingt ans pour observer les tendances à long terme.
 7. **Uncertainties** : Les incertitudes correspondantes pour les anomalies calculées sur différentes périodes.
 
+### Troisième jeu de données (Fichier `new_dataframe.csv`)
+
+Le fichier `new_dataframe.csv` a été généré en utilisant un processus de géocodage via l'API Google, à partir des données de catastrophes naturelles. Ce fichier contient des informations géolocalisées enrichies pour chaque événement de catastrophe. Voici une brève description du processus utilisé pour créer ce fichier :
+
+#### Processus de Géocodage
+
+Voici le code :
+    ```
+    import pandas as pd
+  import concurrent.futures
+  from geopy.geocoders import GoogleV3
+  from geopy.extra.rate_limiter import RateLimiter
+
+  # Charger le fichier CSV
+  df = pd.read_csv("1900_2021_DISASTERS.xlsx - emdat data.csv")
+
+  # Imprimer le nombre de valeurs manquantes dans la colonne 'Latitude'
+  print(df['Latitude'].isna().sum())
+
+  # Initialiser le géolocalisateur
+  geolocator = GoogleV3(api_key="AIzaSyBDLRfAKkVqy7HUO49RSpRsleMUVIP7How")
+  geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1/50)
+
+  # Créer un dictionnaire de cache
+  cache = {}
+
+  def get_coordinates(address):
+    # Si l'adresse est dans le cache, retourner le résultat en cache
+    if address in cache:
+        return cache[address]
+
+    # Sinon, obtenir les coordonnées de l'API
+    location = geocode(address)
+    if location is not None:
+        coordinates = (location.latitude, location.longitude)
+    else:
+        coordinates = (None, None)
+
+    # Stocker le résultat dans le cache
+    cache[address] = coordinates
+
+    return coordinates
+
+  # Appliquer la fonction à chaque ligne du dataframe en parallèle
+  with concurrent.futures.ThreadPoolExecutor() as executor:
+    df['Latitude'], df['Longitude'] = zip(*executor.map(get_coordinates, df['Location']))
+
+  # Imprimer le nombre de valeurs manquantes dans la colonne 'Latitude' après géocodage
+  print(df['Latitude'].isna().sum())
+
+  # Conserver uniquement les colonnes 'Location', 'Latitude' et 'Longitude'
+  df = df[['Location', 'Latitude', 'Longitude']]
+
+  # Sauvegarder le nouveau dataframe dans un fichier CSV
+  df.to_csv("new_dataframe.csv", index=False)
+    ```
+
+1. **Chargement des Données Initiales** : Les données de catastrophes naturelles ont été chargées à partir d'un fichier CSV source.
+2. **Géocodage avec l'API Google** : Utilisant l'API GoogleV3 via la bibliothèque `geopy`, chaque emplacement a été géocodé pour obtenir des coordonnées précises.
+3. **Utilisation de Rate Limiter** : Pour éviter de dépasser les limites de requêtes de l'API, un `RateLimiter` a été employé.
+4. **Caching des Résultats** : Les résultats de géocodage ont été mis en cache pour optimiser les performances et réduire les requêtes inutiles.
+5. **Parallélisation du Processus** : Le processus de géocodage a été exécuté en parallèle pour accélérer le traitement.
+6. **Nettoyage des Données** : Les colonnes finales sélectionnées étaient 'Location', 'Latitude' et 'Longitude'.
+7. **Sauvegarde du Nouveau Fichier CSV** : Les données enrichies ont été sauvegardées dans `new_dataframe.csv`.
+
+
+
+
 
 
 
