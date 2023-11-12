@@ -186,7 +186,7 @@ En revanche certain petit pays comme Haiti on pourtant un nombre de mort très �
 
 ## Installation des Dépendances
 
-- Exécutez `install.packages("nom_de_la_bibliotheque")` dans votre console R pour installer chaque bibliothèque requise individuellement.
+- Exécutez `install.packages("requirement.txt")` dans votre console R pour installer chaque bibliothèque requise individuellement.
 
 ## Configuration des Données
 
@@ -198,20 +198,20 @@ L'application est structurée comme suit :
 
 - **app.R** : C'est le point d'entrée de l'application Shiny. Ce fichier contient à la fois l'interface utilisateur (UI) et la logique serveur.
 - **global.R** : Contient les scripts et les fonctions qui sont utilisés globalement dans l'application. Par exemple, le chargement des données ou des fonctions personnalisées.
-- **modules.R** : (Si utilisé) Contient des modules Shiny pour organiser le code en composants réutilisables.
-- **helpers.R** : (Optionnel) Contient des fonctions auxiliaires pour aider dans diverses tâches comme le traitement des données.
+- **server.R** : Contient des modules Shiny pour organiser le code en composants .
+- **ui.R** : Contient les différents éléments pour l'affichage .
 
 ## Modification et Extension du Code
 
 1. **Ajouter de Nouvelles Fonctionnalités** :
-   - Définissez de nouveaux éléments d'interface utilisateur dans la section UI de `app.R` ou dans des modules séparés dans `modules.R`.
-   - Ajoutez la logique serveur correspondante dans la section server de `app.R` ou en tant que fonctions dans des modules séparés.
+   - Définissez de nouveaux éléments d'interface utilisateur dans la section UI de `ui.r` 
+   - Ajoutez la logique serveur correspondante dans la section server de `server.r` 
 
 2. **Modification des Données** :
    - Les données sont généralement chargées et préparées dans `global.R` ou au début de `app.R`. Modifiez ces scripts pour intégrer de nouvelles sources de données.
 
 3. **Personnalisation de l'Interface** :
-   - Modifiez les éléments d'UI dans `app.R` pour changer l'organisation et l'apparence de l'application.
+   - Modifiez les éléments d'UI dans `ui.R` pour changer l'organisation et l'apparence de l'application.
    - Utilisez les fichiers CSS pour des styles personnalisés si nécessaire.
 
 4. **Debugging et Tests** :
