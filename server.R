@@ -87,8 +87,8 @@ server <- function(input, output) {
       add_markers(x = ~`Total.Deaths`, y = ~`Total.Damages...000.US..`) %>%
       layout(
         title = "Histogramme 2D des Décès et Dommages", # Ajout du titre ici
-        xaxis = list(title = "Total Deaths", range = c(0, 500)),
-        yaxis = list(title = "Total Damages ('000 US$)", range = c(0, 1000000), type = "linear")
+        xaxis = list(title = "Décès totaux", range = c(0, 500)),
+        yaxis = list(title = "Prix des dommages ('000 US$)", range = c(0, 1000000), type = "linear")
       )
     
     p4
@@ -318,7 +318,7 @@ server <- function(input, output) {
         cmin = min(hierarchy$Log_Total_Deaths, na.rm = TRUE), # Minimum basé sur le log du nombre minimal de morts
         cmax = max(hierarchy$Log_Total_Deaths, na.rm = TRUE), # Maximum basé sur le log du nombre maximal de morts
         colorbar = list(
-          title = "Log Total Deaths",
+          title = "Nombre de morts",
           tickvals = log10(c(1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 15000000)),
           ticktext = c("1", "10", "100", "1k", "10k", "100k", "1M", "10M", "")
         )
