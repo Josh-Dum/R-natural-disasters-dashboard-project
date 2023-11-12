@@ -51,7 +51,7 @@ Avant de commencer, assurez-vous d'avoir :
    
 # Rapport d'analyse
 
-##Jeux de données
+## Jeux de données
 
 ### Premier jeu de données (Fichier `Natural_disaster.csv`)
 
@@ -70,6 +70,18 @@ Le fichier `Natural_disaster.csv` est un ensemble de données complet qui docume
 11. **Total Deaths, No Injured, No Affected, No Homeless, Total Affected** : Impact humain (décès, blessés, affectés, sans-abris).
 12. **Insured Damages, Total Damages, CPI** : Dégâts matériels assurés et totaux, indice des prix à la consommation pour contextualiser économiquement.
 13. **Adm Level, Admin1/2 Code, Geo Locations** : Niveaux administratifs concernés et localisations géographiques plus précises.
+
+### Deuxième jeu de données (Fichier `Global Temperature.csv`)
+
+Le fichier `Global Temperature.csv` contient des données détaillées sur les températures mondiales, fournies par Berkeley Earth (https://berkeleyearth.org/data/). Ces données sont essentielles pour analyser les tendances climatiques et comprendre les variations de température sur une longue période. Voici un aperçu des principales colonnes et de leur signification :
+
+1. **Year, Month** : L'année et le mois de l'enregistrement des données.
+2. **Monthly Anomaly** : L'écart mensuel de la température par rapport à une moyenne de référence.
+3. **Monthly Unc.** : L'incertitude associée à l'anomalie mensuelle.
+4. **Annual Anomaly** : L'anomalie annuelle de la température.
+5. **Annual Unc** : L'incertitude associée à l'anomalie annuelle.
+6. **Five-Year Anomaly, Ten-Year Anomaly, Twenty-Year Anomaly** : Anomalies calculées sur des périodes de cinq, dix et vingt ans pour observer les tendances à long terme.
+7. **Uncertainties** : Les incertitudes correspondantes pour les anomalies calculées sur différentes périodes.
 
 
 
