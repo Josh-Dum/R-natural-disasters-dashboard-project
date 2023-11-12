@@ -425,6 +425,20 @@ server <- function(input, output) {
     fig
   })
   
+  #graphique 1 du navtab6
+  output$graph61 <- renderPlotly({
+    # Préparation des données
+    data_summarized <- df_catastrophe %>%
+      group_by(Year) %>%
+      summarize(TotalCost = sum(Total.Damages...000.US.., na.rm = TRUE))
+    
+    # Création du graphique
+    plot_ly(data_summarized, x = ~Year, y = ~TotalCost, type = 'scatter', mode = 'lines+markers') %>%
+      layout(title = 'Coût total des catastrophes par année',
+             xaxis = list(title = 'Année'),
+             yaxis = list(title = 'Coût Total (en milliers de dollars US)'))
+  })
+  
   #graphique 2 du navtab6
   output$graph62 <- renderPlotly({
     

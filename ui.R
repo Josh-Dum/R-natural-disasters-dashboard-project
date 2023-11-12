@@ -119,6 +119,9 @@ ui <- dashboardPage(
       tabItem(tabName = "navitem6",
               div(style = "text-align: center;", h2("Catastrophes les plus chères")),
               fluidRow(
+                box(plotlyOutput("graph61"), width = 12)
+              ),
+              fluidRow(
                 box(title = "Filtres", status = "primary", solidHeader = TRUE, width = 12,
                     sliderInput("year_slider_graph62", "Sélectionnez une plage d'années :", 
                                 min = 1900, max = 2021, value = c(1900, 2021),
