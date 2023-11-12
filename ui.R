@@ -13,7 +13,8 @@ ui <- dashboardPage(
       menuItem("Carte des catastrophes", tabName = "map", icon = icon("globe")),
       menuItem("Evolution des morts", tabName = "navitem3", icon = icon("chart-pie")),
       menuItem("Evolution des catastrophes", tabName = "navitem4", icon = icon("chart-line")),
-      menuItem("Catastrophes les plus meurtrières", tabName = "navitem5", icon = icon("chart-line"))
+      menuItem("Catastrophes les plus meurtrières", tabName = "navitem5", icon = icon("chart-line")),
+      menuItem("Catastrophes les plus chères", tabName = "navitem6", icon = icon("chart-line"))
     )
   ),
   
@@ -112,6 +113,24 @@ ui <- dashboardPage(
               fluidRow(
                 box(plotlyOutput("graph52", height = 1000), width = 12)
               )
+      ),
+      
+      # 6e onglet : Catastrophes les plus chère
+      tabItem(tabName = "navitem6",
+              div(style = "text-align: center;", h2("Catastrophes les plus chères")),
+              fluidRow(
+                box(title = "Filtres", status = "primary", solidHeader = TRUE, width = 12,
+                    sliderInput("year_slider_graph62", "Sélectionnez une plage d'années :", 
+                                min = 1900, max = 2021, value = c(1900, 2021),
+                                step = 1, round = TRUE, sep = "", width = "100%")
+                )
+              ),
+              fluidRow(
+                box(plotlyOutput("graph62", height = 1000), width = 12)
+              )
+              
+              
+              
       )
       
       
