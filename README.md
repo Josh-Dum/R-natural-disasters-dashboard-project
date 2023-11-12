@@ -198,7 +198,7 @@ L'application est structurée comme suit :
 
 - **app.R** : C'est le point d'entrée de l'application Shiny. Ce fichier contient à la fois l'interface utilisateur (UI) et la logique serveur.
 - **global.R** : Contient les scripts et les fonctions qui sont utilisés globalement dans l'application. Par exemple, le chargement des données ou des fonctions personnalisées.
-- **server.R** : Contient des modules Shiny pour organiser le code en composants .
+- **server.R** : Contient des modules Shiny pour la logiue server .
 - **ui.R** : Contient les différents éléments pour l'affichage .
 
 ## Modification et Extension du Code
@@ -212,7 +212,6 @@ L'application est structurée comme suit :
 
 3. **Personnalisation de l'Interface** :
    - Modifiez les éléments d'UI dans `ui.R` pour changer l'organisation et l'apparence de l'application.
-   - Utilisez les fichiers CSS pour des styles personnalisés si nécessaire.
 
 4. **Debugging et Tests** :
    - Utilisez les outils de debugging intégrés dans R et RStudio pour tester et déboguer l'application.
