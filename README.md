@@ -177,6 +177,65 @@ df.to_csv("new_dataframe.csv", index=False)
 - **Impact Variable selon les Pays** : Certains pays, tels que l'Allemagne et la Finlande, semblent être moins touchés par les catastrophes en termes de mortalité. Cette observation peut refléter des capacités de gestion des catastrophes plus efficaces ou des conditions géographiques et climatiques moins propices aux événements catastrophiques majeurs.
 En revanche certain petit pays comme Haiti on pourtant un nombre de mort très élevé lié au catastrophe.
 
+# Guide Développeur
+
+## Prérequis
+
+- **R** : Installez la dernière version de R depuis [le site officiel de R](https://cran.r-project.org/).
+- **Bibliothèques R** : Assurez-vous que les bibliothèques nécessaires telles que Shiny, ggplot2, plotly, dplyr, et leaflet sont installées.
+
+## Installation des Dépendances
+
+- Exécutez `install.packages("nom_de_la_bibliotheque")` dans votre console R pour installer chaque bibliothèque requise individuellement.
+
+## Configuration des Données
+
+- Les données sont chargées à partir de fichiers CSV et GeoJSON. Assurez-vous que les fichiers tels que `countries.geojson`, `Global Temperature.csv`, `natural_disaster.csv`, et `new_dataframe.csv` sont présents dans le dossier approprié.
+
+## Architecture du Code
+
+L'application est structurée comme suit :
+
+- **app.R** : C'est le point d'entrée de l'application Shiny. Ce fichier contient à la fois l'interface utilisateur (UI) et la logique serveur.
+- **global.R** : Contient les scripts et les fonctions qui sont utilisés globalement dans l'application. Par exemple, le chargement des données ou des fonctions personnalisées.
+- **modules.R** : (Si utilisé) Contient des modules Shiny pour organiser le code en composants réutilisables.
+- **helpers.R** : (Optionnel) Contient des fonctions auxiliaires pour aider dans diverses tâches comme le traitement des données.
+
+## Modification et Extension du Code
+
+1. **Ajouter de Nouvelles Fonctionnalités** :
+   - Définissez de nouveaux éléments d'interface utilisateur dans la section UI de `app.R` ou dans des modules séparés dans `modules.R`.
+   - Ajoutez la logique serveur correspondante dans la section server de `app.R` ou en tant que fonctions dans des modules séparés.
+
+2. **Modification des Données** :
+   - Les données sont généralement chargées et préparées dans `global.R` ou au début de `app.R`. Modifiez ces scripts pour intégrer de nouvelles sources de données.
+
+3. **Personnalisation de l'Interface** :
+   - Modifiez les éléments d'UI dans `app.R` pour changer l'organisation et l'apparence de l'application.
+   - Utilisez les fichiers CSS pour des styles personnalisés si nécessaire.
+
+4. **Debugging et Tests** :
+   - Utilisez les outils de debugging intégrés dans R et RStudio pour tester et déboguer l'application.
+   - La console de RStudio affiche des messages utiles pour le debugging lors de l'exécution de l'application Shiny.
+
+## Bonnes Pratiques
+
+- **Versionnage du Code** : Utilisez des systèmes de contrôle de version comme Git pour la gestion du code et GitHub pour le partage et la collaboration.
+- **Documentation** : Documentez les changements majeurs dans le code pour faciliter la compréhension et la maintenance par d'autres développeurs.
+- **Tests** : Pensez à écrire des tests, notamment pour les fonctions complexes, afin de garantir la fiabilité de l'application.
+
+## Lancement de l'Application
+
+1. Ouvrez RStudio et naviguez vers le dossier contenant l'application.
+2. Ouvrez le fichier `app.R`.
+3. Cliquez sur le bouton 'Run App' pour démarrer l'application.
+4. L'application s'ouvrira dans une nouvelle fenêtre de navigateur ou dans le panneau de visualisation de RStudio.
+
+## Utilisation de l'Application
+
+- **Navigation** : Interagissez avec l'interface utilisateur pour explorer différentes visualisations et fonctionnalités.
+- **Interactivité** : Profitez des capacités interactives de Shiny pour une expérience utilisateur dynamique.
+- **Filtres et Sélections** : Utilisez les contrôles de l'application (comme les sliders, boutons, etc.) pour filtrer et personnaliser les visualisations.
 
 
 
