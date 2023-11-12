@@ -11,9 +11,9 @@ Avant de commencer, assurez-vous d'avoir :
 
 1. **Cloner le dépôt** : Ouvrez votre terminal (ou l'invite de commande) et exécutez la commande suivante :
 
-   '''bash
+   ```bash
    git clone [URL de votre dépôt GitHub]
-   '''
+   ```
 
    Remplacez `[URL de votre dépôt GitHub]` par l'URL de votre dépôt.
 
