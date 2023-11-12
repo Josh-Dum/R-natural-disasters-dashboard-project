@@ -95,50 +95,54 @@ server <- function(input, output) {
   })
   
   
+  # Définition du rendu de la carte Leaflet dans l'application Shiny
   output$map <- renderLeaflet({
     
-    df_selected <-df_catastrophe_location %>%
+    # Filtrage des données de catastrophe en fonction de la plage d'années sélectionnée par l'utilisateur
+    df_selected <- df_catastrophe_location %>%
       filter(Year >= input$range[1] & Year <= input$range[2])
     
-    
+    # Initialisation de la carte Leaflet avec les données filtrées
+    # Ajout d'un fond de carte à partir du fournisseur Esri
     map <- leaflet(df_selected) %>%
       addProviderTiles(providers$Esri.WorldTopoMap) %>%
-      setView(lng = 2.5840685, lat = 48.8398094, zoom = 3)
-    # Ajout des marqueurs personnalisés
+      setView(lng = 2.5840685, lat = 48.8398094, zoom = 3)  # Définition de la vue initiale de la carte
     
+    # Boucle pour ajouter des marqueurs personnalisés pour chaque catastrophe
     for (i in 1:nrow(df_selected)) {
+      # Extraction du type de catastrophe pour chaque ligne de données
       catastrophe_type <- df_selected$Disaster.Type[i]
       
+      # Récupération de la couleur et de l'icône correspondant au type de catastrophe
       marker_color <- marqueur_type_de_catastrophe[[catastrophe_type]]$color
       marker_icon <- marqueur_type_de_catastrophe[[catastrophe_type]]$icon
       
+      # Ajout du marqueur sur la carte avec les propriétés personnalisées
       map <- addAwesomeMarkers(
         map, 
         lng=df_selected$Longitude[i], 
         lat=df_selected$Latitude[i], 
-        popup=df_selected$Location[i],
+        popup=df_selected$Location[i],  # Popup affichant le lieu de la catastrophe
         icon=awesomeIcons(
-          icon=marker_icon,
-          markerColor=marker_color
+          icon=marker_icon,   # Icône personnalisée
+          markerColor=marker_color  # Couleur personnalisée
         ),
-        group = catastrophe_type
+        group = catastrophe_type  # Groupement des marqueurs par type de catastrophe
       )
-      
     }
     
-    
-    
+    # Ajout d'un contrôle de couches pour permettre à l'utilisateur de filtrer les marqueurs par type de catastrophe
     map <- addLayersControl(
       map,
       overlayGroups = names(marqueur_type_de_catastrophe),
       options = layersControlOptions(collapsed = FALSE)
     )
     
-    
-    
+    # Préparation des icônes et des couleurs pour la légende
     icons_for_legend <- sapply(marqueur_type_de_catastrophe, function(x) {gsub("-sign", "", x$icon)})
     colors_for_legend <- sapply(marqueur_type_de_catastrophe, function(x) x$color)
     
+    # Fonction pour générer le code HTML de la légende
     generateLegendHTML <- function(icons, colors, labels) {
       html_legend <- '<div style="background-color: rgba(255,255,255,0.8); padding: 10px; border-radius: 5px;">'
       html_legend <- paste0(html_legend, "<h5>Types de Catastrophes</h5>")
@@ -148,11 +152,15 @@ server <- function(input, output) {
       html_legend <- paste0(html_legend, "</div>")
       return(html_legend)
     }
+    
+    # Génération et ajout de la légende HTML sur la carte
     html_legend <- generateLegendHTML(icons_for_legend, colors_for_legend, names(marqueur_type_de_catastrophe))
     map <- addControl(map, html=html_legend, position="bottomleft")
     
-    
-    map})
+    # Retourner la carte configurée pour l'affichage
+    map
+  })
+  
   
   #graphique 1 de navitem 3
   output$graph31 <- renderPlotly({
