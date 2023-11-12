@@ -12,16 +12,15 @@ Avant de commencer, assurez-vous d'avoir :
 1. **Cloner le dépôt** : Ouvrez votre terminal (ou l'invite de commande) et exécutez la commande suivante :
 
    ```bash
-   git clone [URL de votre dépôt GitHub]
+   git clone https://git.esiee.fr/dumontjo/projet_dumont_vigier_dsia4101c_e4_natural_disaster
    ```
 
-   Remplacez `[URL de votre dépôt GitHub]` par l'URL de votre dépôt.
 
 2. **Naviguer dans le dossier du projet** :
 
-   """
+   ```
    cd [nom du dossier]
-   """
+   ```
 
    Remplacez `[nom du dossier]` par le nom de votre dossier de projet cloné.
 
@@ -31,10 +30,10 @@ Avant de commencer, assurez-vous d'avoir :
 
 2. **Installer les packages R nécessaires** :
 
-   """
+   ```
    packages <- readLines("requirements.txt")
    install.packages(packages)
-   """
+   ```
 
 ## Téléchargement et Configuration des Données
 
@@ -46,13 +45,8 @@ Avant de commencer, assurez-vous d'avoir :
 
 1. **Exécuter l'application** : Dans RStudio (ou un autre environnement R), naviguez jusqu'à l'emplacement du fichier `app.R` et exécutez-le :
 
-   """
+   ```
    shiny::runApp("app.R")
-   """
+   ```
 
-## Utilisation de l'Application
 
-- **Page d'accueil** : Décrit la vue d'ensemble de l'application, les fonctionnalités principales et comment naviguer dans l'application.
-- **Histogrammes** : Expliquez comment utiliser les histogrammes interactifs, sélectionner les données, etc.
-- **Carte des Catastrophes** : Guidez l'utilisateur sur l'interaction avec la carte, le zoom, la sélection des régions, etc.
-- [Autres fonctionnalités] : Détaillez d'autres composants ou fonctionnalités spécifiques de votre application.
