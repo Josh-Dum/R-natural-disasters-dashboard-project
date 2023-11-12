@@ -148,6 +148,36 @@ df.to_csv("new_dataframe.csv", index=False)
 6. **Nettoyage des Données** : Les colonnes finales sélectionnées étaient 'Location', 'Latitude' et 'Longitude'.
 7. **Sauvegarde du Nouveau Fichier CSV** : Les données enrichies ont été sauvegardées dans `new_dataframe.csv`.
 
+## Principales Conclusions
+
+### Partie Histogramme
+
+- **Fréquence des Décès** : La grande majorité des catastrophes provoquent peu de décès. Cette observation suggère que, bien que fréquentes, toutes les catastrophes naturelles ne sont pas nécessairement mortelles à grande échelle.
+
+### Partie Carte des Catastrophes
+
+- **Localisation des Catastrophes** : Les inondations se produisent principalement autour des fleuves, et de nombreuses tornades (orages supercellulaires) sont observées dans la Tornado Valley aux États-Unis. Cette répartition géographique montre clairement les zones les plus susceptibles d'être affectées par certaines catastrophes.
+
+### Partie Évolution des Catastrophes
+
+- **Augmentation du Nombre de Catastrophes** : Depuis 1900, le nombre de catastrophes naturelles semble augmenter parallèlement à l'augmentation de la température globale. 
+- **Croissance de Certaines Catastrophes** : Une augmentation notable est observée pour les inondations et les tempêtes, suggérant un changement dans les modèles météorologiques et climatiques.
+
+### Partie Catastrophes les Plus Coûteuses
+
+- **Augmentation des Dégâts Matériels** : Les dommages causés par les catastrophes augmentent également au fil des années. 
+- **Coûts Élevés de Certaines Catastrophes** : Les cyclones, les séismes et les inondations sont particulièrement coûteux en termes de dégâts, reflétant leur impact dévastateur sur les infrastructures.
+
+### Partie Catastrophes les Plus Meurtrières
+
+- **Catastrophes avec le Plus Grand Nombre de Décès** : Les sécheresses et les épidémies sont identifiées comme les catastrophes les plus meurtrières. Ces types d'événements ont un impact direct et significatif sur la santé humaine et la sécurité alimentaire.
+
+### Partie Évolution des Morts
+
+- **Impact Variable selon les Pays** : Certains pays, tels que l'Allemagne et la Finlande, semblent être moins touchés par les catastrophes en termes de mortalité. Cette observation peut refléter des capacités de gestion des catastrophes plus efficaces ou des conditions géographiques et climatiques moins propices aux événements catastrophiques majeurs.
+En revanche certain petit pays comme Haiti on pourtant un nombre de mort très élevé lié au catastrophe.
+
+
 
 
 
