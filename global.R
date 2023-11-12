@@ -15,6 +15,8 @@ library(tidyr) # pour pivot_wider
 library(sf)
 library(sp)
 library(networkD3)
+# On importe nos données
+disaster_data <- read_csv("./natural_disaster.csv")
 
 # Chargement et préparation des données du premier fichier
 df_catastrophe <- read.csv("natural_disaster.csv",sep=",")
@@ -55,8 +57,6 @@ marqueur_type_de_catastrophe <- list(
   "Glacial lake outburst" = list(color = 'lightblue', icon = 'tint')
 )
 
-# On importe nos données
-disaster_data <- read_csv("./natural_disaster.csv")
 
 # Suppression des lignes avec des valeurs manquantes pour 'ISO' et 'Year'
 df_castrophe_country <- df_catastrophe %>% 

@@ -28,10 +28,10 @@ server <- function(input, output) {
   
   # Graphique 1
   output$graph1 <- renderPlot({
-    filtered_data <- disaster_data %>%
+    filtered_data <- df_catastrophe %>%
       filter(Year >= input$year_slider[1], Year <= input$year_slider[2])
     
-    ggplot(filtered_data, aes(x = `Total Deaths`)) + 
+    ggplot(filtered_data, aes(x = `Total.Deaths`)) + 
       geom_histogram(fill = "blue", color = "black", alpha = 0.7) + 
       scale_y_log10(labels = scales::comma) +
       theme_minimal() +
@@ -43,11 +43,11 @@ server <- function(input, output) {
   
   # Graphique 2
   output$graph2 <- renderPlot({
-    filtered_data <- disaster_data %>% 
+    filtered_data <- df_catastrophe %>% 
       filter(Year >= input$year_slider[1], Year <= input$year_slider[2], 
-             `Total Deaths` >= 0, `Total Deaths` <= 10000)
+             `Total.Deaths` >= 0, `Total.Deaths` <= 10000)
     
-    ggplot(filtered_data, aes(x = `Total Deaths`)) + 
+    ggplot(filtered_data, aes(x = `Total.Deaths`)) + 
       geom_histogram(fill = "blue", color = "black", alpha = 0.7) + 
       scale_y_log10(labels = scales::comma) +
       theme_minimal() +
@@ -59,11 +59,11 @@ server <- function(input, output) {
   
   # Graphique 3
   output$graph3 <- renderPlot({
-    filtered_data <- disaster_data %>% 
+    filtered_data <- df_catastrophe %>% 
       filter(Year >= input$year_slider[1], Year <= input$year_slider[2], 
-             `Total Deaths` >= 0, `Total Deaths` <= 10000)
+             `Total.Deaths` >= 0, `Total.Deaths` <= 10000)
     
-    ggplot(filtered_data, aes(x = `Total Deaths`, fill = `Disaster Subgroup`)) + 
+    ggplot(filtered_data, aes(x = `Total.Deaths`, fill = `Disaster.Subgroup`)) + 
       geom_histogram(bins = 30, color="black", alpha=0.7) +
       scale_y_log10(labels = scales::comma) +
       theme_minimal() +
@@ -78,13 +78,13 @@ server <- function(input, output) {
   
   
   output$graph4 <- renderPlotly({
-    filtered_data <- disaster_data %>%
+    filtered_data <- df_catastrophe %>%
       filter(Year >= input$year_slider[1], Year <= input$year_slider[2], 
-             `Total Deaths` <= 500, `Total Damages ('000 US$)` <= 1000000)
+             `Total.Deaths` <= 500, `Total.Damages...000.US..` <= 1000000)
     
     p4 <- plot_ly(data = filtered_data) %>%
-      add_histogram2d(x = ~`Total Deaths`, y = ~`Total Damages ('000 US$)`, nbinsx = 6, nbinsy = 6) %>%
-      add_markers(x = ~`Total Deaths`, y = ~`Total Damages ('000 US$)`) %>%
+      add_histogram2d(x = ~`Total.Deaths`, y = ~`Total.Damages...000.US..`, nbinsx = 6, nbinsy = 6) %>%
+      add_markers(x = ~`Total.Deaths`, y = ~`Total.Damages...000.US..`) %>%
       layout(
         title = "Histogramme 2D des Décès et Dommages", # Ajout du titre ici
         xaxis = list(title = "Total Deaths", range = c(0, 500)),
@@ -223,7 +223,7 @@ server <- function(input, output) {
       addLegend("bottomleft", 
                 pal = colorNumeric("OrRd", domain = merged_disaster_data$Disaster_Count),
                 values = merged_disaster_data$Disaster_Count,
-                title = "Nombre de morts",
+                title = "Nombre de catastrophes naturelles par pays",
                 opacity = 0.7)
     
     map_disaster
@@ -239,25 +239,25 @@ server <- function(input, output) {
     
     country_death_counts <- df_filtered_death %>%
       group_by(ISO) %>%
-      summarise(Death_Count = sum(`Death Count`))
+      summarise(Death_Count = sum(`Death Count`),Death_Count_log =log(1+sum(`Death Count`)) )
     
     merged_death_data <- merge(country_geojson_sf, country_death_counts, by.x = "ISO_A3", by.y = "ISO")
     
     map_death <- leaflet() %>%
       setView(lng = 2.5840685, lat = 48.8398094, zoom = 3) %>%
       addProviderTiles(providers$Esri.WorldTopoMap) %>%addPolygons(data = merged_death_data,
-                                                                   fillColor = ~colorNumeric("OrRd", Death_Count)(Death_Count),
+                                                                   fillColor = ~colorNumeric("YlOrRd", Death_Count_log)(Death_Count_log),
                                                                    weight = 1,
                                                                    color = "black",
                                                                    fillOpacity = 0.7,
-                                                                   label = ~paste0(ISO_A3, ": ", Death_Count),
+                                                                   label = ~paste0(ISO_A3, ": ", Death_Count_log),
                                                                    layerId = ~ISO_A3,
                                                                    group = "Nombre de mort par pays"
       ) %>%
       addLayersControl(overlayGroups = c("Nombre de mort par pays")) %>%
       # Ajouter une légende pour les décès (ajuster en fonction des données)
       addLegend("bottomleft", 
-                pal = colorNumeric("OrRd", domain = merged_death_data$Death_Count),
+                pal = colorNumeric("YlOrRd", domain = merged_death_data$Death_Count),
                 values = merged_death_data$Death_Count,
                 title = "Nombre de morts",
                 opacity = 0.7)
@@ -423,6 +423,20 @@ server <- function(input, output) {
     
     # Retourner le graphique Plotly
     fig
+  })
+  
+  #graphique 1 du navtab6
+  output$graph61 <- renderPlotly({
+    # Préparation des données
+    data_summarized <- df_catastrophe %>%
+      group_by(Year) %>%
+      summarize(TotalCost = sum(Total.Damages...000.US.., na.rm = TRUE))
+    
+    # Création du graphique
+    plot_ly(data_summarized, x = ~Year, y = ~TotalCost, type = 'scatter', mode = 'lines+markers') %>%
+      layout(title = 'Coût total des catastrophes par année',
+             xaxis = list(title = 'Année'),
+             yaxis = list(title = 'Coût Total (en milliers de dollars US)'))
   })
   
   #graphique 2 du navtab6
